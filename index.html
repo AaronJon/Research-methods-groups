@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INF107D Groupings</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<header>
+<h1>INF107D Presentation Groupings</h1>
+<p>Click tab to find full members of your group</p>
+</header>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search your name or index number...">
+</div>
+
+<div id="searchResults"></div>
+
+<div class="container" id="groupContainer"></div>
+
+<!-- Modal -->
+<div class="modal" id="groupModal">
+    <div class="modal-content">
+
+        <span class="close">&times;</span>
+
+        <h2 id="modalTitle"></h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Index Number</th>
+                    <th>Region</th>
+                </tr>
+            </thead>
+
+            <tbody id="studentList"></tbody>
+
+        </table>
+
+    </div>
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
