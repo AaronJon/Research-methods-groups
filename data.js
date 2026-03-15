@@ -202,6 +202,8 @@ const groups = {
     { name: "BLUDE STEPHEN KWASI", index: "BSCIT/CR/01/25/0018", region: "VOLTA" },
     { name: "ANTHONY BADU OSEI", index: "BSCIT/OT/30/25/0001", region: "VOLTA" },
     { name: "DZAMESI FRANK KWAKU", index: "BSCIT/VR/02/25/0001", region: "VOLTA" }
+    { name: "ENOCK KWAKU TETTEH", index: "CD/ITE/ER/30/25/0004", region: "EASTERN" }
+    { name: "DAVID TEYE NORNYEMI", index: "CD/ITE/ER/30/25/0019", region: "ACCRA" }
   ],
   19: [
     { name: "JOHN MYERS", index: "CD/ITE/WR/30/25/0001", region: "WESTERN" },
