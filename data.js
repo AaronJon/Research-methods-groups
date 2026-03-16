@@ -203,7 +203,9 @@ const groups = {
     { name: "ANTHONY BADU OSEI", index: "BSCIT/OT/30/25/0001", region: "VOLTA" },
     { name: "DZAMESI FRANK KWAKU", index: "BSCIT/VR/02/25/0001", region: "VOLTA" },
     { name: "ENOCK KWAKU TETTEH", index: "CD/ITE/ER/30/25/0004", region: "EASTERN" },
-    { name: "DAVID TEYE NORNYEMI", index: "CD/ITE/ER/30/25/0019", region: "ACCRA" }
+    { name: "CHRISTOPHER ATO SAM", index: "BSCIT/GA/40/25/0001", region: "ACCRA" },
+    { name: "DAVID TEYE NORNYEMI", index: "CD/ITE/ER/30/25/0019", region: "ACCRA" },
+    { name: "Emmanuel Essiaw", index: "CD/ITE/WR/30/25/0003", region: "EASTERN" }
   ],
   19: [
     { name: "JOHN MYERS", index: "CD/ITE/WR/30/25/0001", region: "WESTERN" },
