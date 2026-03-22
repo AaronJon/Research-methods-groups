@@ -8,6 +8,7 @@ const groups = {
     { name: "ASUMA EBENEZER", index: "BEMAT/BA/33/25/0002", region: "BA" },
     { name: "BARBARA AHINAKWA", index: "BSCIT/AH/30/25/0001", region: "BA" },
     { name: "FUSEINI ISSIFU", index: "BSCIT/BA/33/25/0001", region: "BA" },
+    { name: "AUGUSTINE MENSAH", index: "CD/ITE/CR/30/25/0007", region: "CENTRAL" },
     { name: "BUKARI SAMUEL BABA", index: "BSCIT/CR/01/25/0001", region: "BA" }
   ],
   2: [
@@ -54,8 +55,7 @@ const groups = {
     { name: "ISAAC ANNAN", index: "BEMAT/CR/01/25/0006", region: "CENTRAL" },
     { name: "GYASI KOFI", index: "CD/ITE/AS/30/25/0023", region: "ASHANTI" },
     { name: "ERIC KOBINA SAAH", index: "BSCIT/CR/30/25/0006", region: "CENTRAL" },
-    { name: "Darko Mante Charles", index: "BEMAT/GA/40/25/0009", region: "ACCRA" },
-    { name: "ERIC KOBINA SAAH", index: "BSCIT/CR/30/25/0006", region: "ACCRA" }
+    { name: "Richmond Abu", index: "BEMAT/CR/01/25/0014", region: "central" }
   ],
   6: [
     { name: "DENNIS BAIDOO", index: "BEMAT/CR/01/25/0010", region: "CENTRAL" },
@@ -85,7 +85,7 @@ const groups = {
     { name: "DANIEL OWUSU", index: "BSCIT/SR/30/25/0002", region: "CENTRAL" },
     { name: "ENOCH SAKYI YAW OBISAW", index: "BSCIT/SR/30/25/0003", region: "CENTRAL" },
     { name: "RICHMOND KRAMPAH", index: "BSCIT/WR/06/25/0001", region: "CENTRAL" },
-    { name: "SAMUEL ODARTEY LAMPTEY", index: "BSEIT/CR/30/25/0005", region: "CENTRAL" },
+    { name: "Philemon Ansah", index: "CD/ITE/CR/30/25/0003", region: "CENTRAL" },
     { name: "JERRY HEGAH", index: "CD/ITE/CR/01/25/0003", region: "CENTRAL" },
     { name: "SOLOMON LAWSON", index: "CD/ITE/CR/01/25/0004", region: "CENTRAL" },
     { name: "OBED ADOKOH", index: "CD/ITE/CR/30/25/0005", region: "CENTRAL" },
@@ -136,14 +136,14 @@ const groups = {
     { name: "SAMUEL ABOAGYE", index: "BSCIT/GA/09/25/0001", region: "GREATER ACCRA" },
     { name: "AGBEYOME XORSE KWAKU", index: "BSCIT/GA/09/25/0002", region: "GREATER ACCRA" },
     { name: "SARFO KAITOO GIDEON", index: "BSCIT/GA/09/25/0003", region: "GREATER ACCRA" },
-    { name: "SANDRA LARKO APENKRO", index: "BSCIT/GA/09/25/0005", region: "GREATER ACCRA" },
+    { name: "Simon Bannerman", index: "CD/ITE/CR/01/25/0005", region: "CENTRAL" },
     { name: "BENEDICTA HUJALEY", index: "BSCIT/GA/09/25/0006", region: "GREATER ACCRA" },
     { name: "ANDOH GABRIEL", index: "BSCIT/GA/09/25/0007", region: "GREATER ACCRA" }
   ],
   13: [
     { name: "DUMEVI ERNEST DREY", index: "BSCIT/GA/09/25/0008", region: "GREATER ACCRA" },
     { name: "OSEI JESSICA AGYEIWAA", index: "BSCIT/GA/09/25/0014", region: "GREATER ACCRA" },
-    { name: "ATSIKEN JONAS DONALDSON", index: "BSCIT/GA/25/40/0003", region: "GREATER ACCRA" },
+    { name: "ATSIKEN JONAS DONALDSON", index: "BSCIT/GA/40/25/0003", region: "GREATER ACCRA" },
     { name: "MENSAH-BRUCE JOHN", index: "BSCIT/GA/40/25/0002", region: "GREATER ACCRA" },
     { name: "DERRICK OKYERE", index: "BSCIT/GA/40/25/0004", region: "GREATER ACCRA" },
     { name: "DORCAS OWUSU", index: "BSCIT/GA/40/25/0005", region: "GREATER ACCRA" },
@@ -165,7 +165,7 @@ const groups = {
     { name: "ENOCH TIEKU", index: "BSCIT/GA/40/25/0028", region: "GREATER" }
   ],
   15: [
-    { name: "JOSEPH NII LARYEA", index: "BSCIT/GA/40/25/23", region: "GREATER ACCRA" },
+    { name: "Darko Mante Charles", index: "BEMAT/GA/40/25/0009", region: "ACCRA" },
     { name: "ASSIE OFORI BERNARD", index: "CD/ITE/GA/40/25/0003", region: "GREATER ACCRA" },
     { name: "ANITA ANDAM", index: "CD/ITE/CR/01/25/0002", region: "GREATER ACCRA" },
     { name: "ADDISON DINSEY", index: "CD/ITE/CR/01/25/0010", region: "GREATER ACCRA" },
@@ -173,7 +173,7 @@ const groups = {
     { name: "ABRAHAM TETTEH AGBENORSI", index: "CD/ITE/GA/09/0003", region: "GREATER ACCRA" },
     { name: "GILBERT ADANUSAH", index: "CD/ITE/GA/09/25/0001", region: "GREATER ACCRA" },
     { name: "OBODAI PASCALENE TORSHIE", index: "CD/ITE/GA/09/25/0002", region: "GREATER ACCRA" },
-    { name: "ABRAHAM TETTEH AGBENORSI", index: "CD/ITE/GA/09/25/0003", region: "GREATER ACCRA" },
+    { name: "Abraham Kobina Essoun", index: "CD/ITE/CR/30/25/0016", region: "CENTRAL" },
     { name: "PHILIP DEY", index: "CD/ITE/GA/09/25/0005", region: "GREATER ACCRA" }
   ],
   16: [
@@ -205,6 +205,9 @@ const groups = {
     { name: "ENOCK KWAKU TETTEH", index: "CD/ITE/ER/30/25/0004", region: "EASTERN" },
     { name: "CHRISTOPHER ATO SAM", index: "BSCIT/GA/40/25/0001", region: "ACCRA" },
     { name: "DAVID TEYE NORNYEMI", index: "CD/ITE/ER/30/25/0019", region: "ACCRA" },
+    { name: "KELVIN KOJO AIDOO", index: "CD/ITE/CR/30/25/0009", region: "CENTRAL" },
+    { name: "PETER NUAMAH", index: "CD/ITE/CR/01/25/0008", region: "CENTRAL" },
+    { name: "PROSPER ABAKAH", index: "CD/ITE/CR/30/25/0001", region: "CENTRAL" },
     { name: "Emmanuel Essiaw", index: "CD/ITE/WR/30/25/0003", region: "EASTERN" }
   ],
   19: [
@@ -221,6 +224,13 @@ const groups = {
   20: [
     { name: "YAKUBU NASHIRU ABANG", index: "BSCIT/CR/01/25/0016", region: "WESTERN NORTH" },
     { name: "MENSAH BRIGHT", index: "CD/ITE/WR/30/25/0006", region: "WESTERN NORTH" },
+    { name: "CHRISTIAN KWESI AFARI", index: "CD/ITE/CR/30/25/0020", region: "CENTRAL" },
+    { name: "DAVIES ABRAHAM", index: "CD/ITE/CR/01/25/0013", region: "CENTRAL" },
+    { name: "EMMANUEL ASMAH", index: "CD/ITE/CR/30/25/0006", region: "CENTRAL" },
+    { name: "FREDERICK ESSOUN", index: "CD/ITE/CR/30/25/0017", region: "CENTRAL" },
+    { name: "ISAAC ATO ACQUAH", index: "CD/ITE/CR/30/25/0015", region: "CENTRAL" },
+    { name: "JOSHUA AMEWOLOR", index: "CD/ITE/CR/30/25/0013", region: "CENTRAL" },
+    { name: "JUSTICE KOFI HACKMAN", index: "CD/ITE/CR/30/25/0002", region: "CENTRAL" },
     { name: "APPIAH PRINCE", index: "CD/ITE/WR/30/25/0009", region: "WESTERN NORTH" }
   ]
 };
