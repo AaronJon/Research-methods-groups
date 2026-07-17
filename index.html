@@ -409,7 +409,17 @@ let activeRegion = null;
 const regionsPresent = Object.keys(regionNames).filter(r =>
   Object.values(groups).some(list => list.some(s => s.region === r))
 );
+const allBtn = document.createElement("button");
+allBtn.innerHTML = `<span class="dot" style="background:var(--navy)"></span>All Regions`;
+allBtn.dataset.region = "";
+allBtn.onclick = () => {
+  activeRegion = null;
+  renderLegend();
+  renderCards();
+};
+legend.appendChild(allBtn);
 
+  
 regionsPresent.forEach(r => {
   const btn = document.createElement("button");
   btn.innerHTML = `<span class="dot" style="background:var(--r-${r})"></span>${r} · ${regionNames[r]}`;
