@@ -434,7 +434,7 @@ regionsPresent.forEach(r => {
 
 function renderLegend(){
   [...legend.children].forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.region === activeRegion);
+    btn.classList.toggle("active", (btn.dataset.region || null) === activeRegion);
   });
   sectionLabel.textContent = activeRegion
     ? `Showing groups with students from ${regionNames[activeRegion]} (${activeRegion}) — click again to clear`
