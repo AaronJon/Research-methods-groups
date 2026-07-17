@@ -1,4 +1,3 @@
-```javascript
 const groups = {
   1: [
     { name: "Asare Abaitey", index: "CD/ITE/VR/04/24/0008", region: "VR" },
@@ -211,5 +210,3 @@ const groups = {
     { name: "Lawrence Richmond Agbemadu", index: "BSCIT/VR/04/23/0003", region: "VR" }
   ]
 };
-
-```
