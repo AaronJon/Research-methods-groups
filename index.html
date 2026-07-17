@@ -1,47 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RESEARCH METHODS</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Methods — Groups</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#1b1d2a;
+    --paper:#f6f4ef;
+    --card:#ffffff;
+    --line:#e4e0d6;
+    --navy:#232653;
+    --gold:#c8912f;
+    --muted:#6b6f80;
+
+    /* region palette — one distinct hue per Ghana region code in the data */
+    --r-VR:#2f6f6a;  /* Volta        - teal    */
+    --r-CR:#c8912f;  /* Central      - gold    */
+    --r-AS:#8a3b3b;  /* Ashanti      - brick   */
+    --r-ER:#3d5a80;  /* Eastern      - steel   */
+    --r-NR:#6d5a8c;  /* Northern     - plum    */
+    --r-BA:#4a7c3f;  /* Brong-Ahafo  - moss    */
+    --r-WR:#b5651d;  /* Western      - ochre   */
+    --r-UE:#2a5c8a;  /* Upper East   - blue    */
+    --r-UW:#7a6a3f;  /* Upper West   - olive   */
+    --r-GA:#a3455a;  /* Greater Accra- rose    */
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  header{
+    background:var(--navy); color:#f2f1ea;
+    padding:3.2rem 1.5rem 2.6rem; text-align:center;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{
+    font-size:.72rem; letter-spacing:.16em; text-transform:uppercase;
+    color:#c9c6e8; margin-bottom:.6rem; font-weight:600;
+  }
+  header h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:clamp(1.8rem,4vw,2.7rem);
+    margin:0 0 .5rem;
+  }
+  header p{ margin:0; color:#c3c1da; font-size:.98rem; }
+
+  .search-wrap{
+    max-width:640px; margin:-1.6rem auto 0; padding:0 1.2rem; position:relative; z-index:5;
+  }
+  #searchInput{
+    width:100%; padding:1rem 1.4rem; border-radius:14px; border:1px solid var(--line);
+    box-shadow:0 12px 24px -10px rgba(35,38,83,.25); outline:none; font-size:1rem;
+    font-family:inherit; background:var(--card); color:var(--ink);
+  }
+  #searchInput:focus{ border-color:var(--navy); }
+
+  #searchResults{ max-width:640px; margin:.7rem auto 0; padding:0 1.2rem; }
+  .result-card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:.85rem 1.1rem; margin-bottom:.55rem; display:flex; justify-content:space-between;
+    align-items:center; gap:1rem;
+  }
+  .result-card strong{ font-weight:600; }
+  .result-card .idx{ color:var(--muted); font-size:.85rem; }
+  .result-tag{
+    color:#fff; padding:.25rem .7rem; border-radius:999px; font-size:.72rem;
+    font-weight:600; letter-spacing:.03em; white-space:nowrap;
+  }
+
+  /* region legend / filter */
+  .legend{
+    max-width:900px; margin:2.2rem auto .4rem; padding:0 1.2rem;
+    display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center;
+  }
+  .legend button{
+    display:flex; align-items:center; gap:.45rem; font-family:inherit;
+    background:var(--card); border:1px solid var(--line); border-radius:999px;
+    padding:.4rem .85rem .4rem .6rem; cursor:pointer; font-size:.78rem; font-weight:600;
+    color:var(--ink); transition:.15s ease;
+  }
+  .legend button .dot{ width:.62rem; height:.62rem; border-radius:50%; flex:none; }
+  .legend button:hover{ border-color:var(--navy); }
+  .legend button.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .legend .clear{ opacity:.65; font-weight:500; }
+
+  .section-label{
+    text-align:center; max-width:900px; margin:1.6rem auto .2rem; padding:0 1.2rem;
+    color:var(--muted); font-size:.82rem;
+  }
+
+  .container{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:16px; padding:1.2rem; max-width:960px; margin:0 auto 3rem;
+  }
+
+  .group-card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:1.1rem 1.1rem 1rem; cursor:pointer; text-align:left;
+    box-shadow:0 2px 6px rgba(27,29,42,.04); transition:.18s ease;
+  }
+  .group-card:hover{ transform:translateY(-3px); box-shadow:0 10px 20px -8px rgba(27,29,42,.18); border-color:var(--navy); }
+  .group-card.dimmed{ opacity:.32; }
+  .group-card.highlighted{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold); }
+
+  .group-card .g-num{
+    font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; line-height:1;
+  }
+  .group-card .g-count{ color:var(--muted); font-size:.78rem; margin-top:.2rem; }
+  .g-regions{ display:flex; gap:4px; margin-top:.7rem; flex-wrap:wrap; }
+  .g-regions .dot{ width:.5rem; height:.5rem; border-radius:50%; }
+
+  /* modal */
+  .modal{
+    display:none; position:fixed; inset:0; background:rgba(27,29,42,.55);
+    backdrop-filter:blur(3px); z-index:1000; padding:2rem 1rem;
+  }
+  .modal-content{
+    background:var(--card); margin:2vh auto; padding:2rem; width:100%; max-width:720px;
+    border-radius:18px; position:relative; max-height:88vh; overflow-y:auto;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.4);
+  }
+  .modal-content h2{ font-family:'Fraunces',serif; font-weight:600; margin:0 0 1rem; }
+  .close{
+    position:absolute; top:1.1rem; right:1.3rem; font-size:1.6rem; cursor:pointer;
+    color:var(--muted); line-height:1;
+  }
+  .close:hover{ color:var(--ink); }
+
+  table{ width:100%; border-collapse:collapse; }
+  th{
+    background:var(--paper); padding:.7rem .8rem; text-align:left; font-size:.78rem;
+    text-transform:uppercase; letter-spacing:.04em; color:var(--muted); border-bottom:1px solid var(--line);
+  }
+  td{ padding:.7rem .8rem; border-bottom:1px solid var(--line); font-size:.92rem; }
+  td.rtag{ white-space:nowrap; }
+  .badge{ color:#fff; padding:.2rem .55rem; border-radius:999px; font-size:.72rem; font-weight:600; }
+
+  footer{ text-align:center; color:var(--muted); font-size:.8rem; padding:1rem 1rem 2.5rem; }
+</style>
 </head>
 <body>
 
 <header>
-    <h1>RESEARCH METHODS GROUPS</h1>
-    <p>Find your group members easily</p>
+  <div class="eyebrow">College of Distance Education</div>
+  <h1>Research Methods Groups</h1>
+  <p>Find your group and members — search by name, index number, or region</p>
 </header>
 
-<div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search by name or index number...">
+<div class="search-wrap">
+  <input type="text" id="searchInput" placeholder="Search by name or index number…">
 </div>
-
 <div id="searchResults"></div>
+
+<div class="legend" id="legend"></div>
+<div class="section-label" id="sectionLabel">22 groups · click a region above to filter, or click any group to view its members</div>
+
 <div class="container" id="groupContainer"></div>
 
-<!-- Modal -->
 <div class="modal" id="groupModal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Index Number</th>
-                        <th>Region</th>
-                    </tr>
-                </thead>
-                <tbody id="studentList"></tbody>
-            </table>
-        </div>
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>No</th><th>Name</th><th>Index Number</th><th>Region</th></tr></thead>
+        <tbody id="studentList"></tbody>
+      </table>
     </div>
+  </div>
 </div>
 
-<script src="data.js"></script>
-<script src="script.js"></script>
+<footer>Tap outside the panel or press the × to close</footer>
+
+<script>
+const groups = {
+  1: [
+    { name: "Asare Abaitey", index: "CD/ITE/VR/04/24/0008", region: "VR" },
+    { name: "CORBAN AWUKU", index: "CD/ITE/VR/04/24/0006", region: "VR" },
+    { name: "DONKOR COLLINS", index: "CD/ITE/VR/04/23/0005", region: "VR" },
+    { name: "DORA EDITH FIABU", index: "BSCIT/VR/04/24/0005", region: "VR" },
+    { name: "Emmanuel Kwaku Klutse", index: "CD/ITE/VR/04/23/0013", region: "VR" },
+    { name: "INNOCENT KWASI XEVI", index: "CD/ITE/VR/04/23/0006", region: "VR" },
+    { name: "JOHNNY ALIFODZI", index: "BSCIT/VR/24/0012", region: "VR" },
+    { name: "JOSHUA KORBLAH WANORMETAH", index: "BSCIT/VR/04/23/0002", region: "VR" }
+  ],
+  2: [
+    { name: "Lukman Sulemana", index: "CD/ITE/VR/04/24/0005", region: "VR" },
+    { name: "MISHIHU PETER EDEM", index: "CD/ITE/VR/04/23/0001", region: "VR" },
+    { name: "NUKUNU BENJAMIN", index: "CD/ITE/VR/04/24/0012", region: "VR" },
+    { name: "ROBERT AHIAVE", index: "CD/ITE/VR/04/23/0009", region: "VR" },
+    { name: "SYLVESTER ATTAH", index: "CD/ITE/VR/04/24/0004", region: "VR" },
+    { name: "TSEDZAH DAVID LIVINGSTON YAW", index: "CD/ITE/VR/04/24/00011", region: "VR" },
+    { name: "AWUKU CORBAN", index: "CD/ITE/VR/04/24/0006", region: "VR" },
+    { name: "ADDAE FELIX", index: "CD/ITE/VR/04/24/0013", region: "VR" }
+  ],
+  3: [
+    { name: "ALFRED KWASI", index: "BSCIT/CR/01/23/0016", region: "CR" },
+    { name: "ANNAN FRANKLIN", index: "CD/ITE/CR/01/23/0028", region: "CR" },
+    { name: "ANTHONY DAVID AUBYN", index: "CD/ITE/CR/01/23/0029", region: "CR" },
+    { name: "BOYE, EMMANUEL ABBAS", index: "CD/ITE/CR/01/23/0013", region: "CR" },
+    { name: "CLEMENT KOFI PRAH", index: "CD/ITE/CR/01/24/0014", region: "CR" },
+    { name: "CLEMENT KOFI PRAH", index: "CD/ITE/CR/01/24/0014", region: "CR" },
+    { name: "DORCAS ASIEDUWAA DONKOR", index: "CD/ITE/CR/01/23/0021", region: "CR" },
+    { name: "Ebenezer Arthur", index: "BScIT/CR/01/23/0018", region: "CR" },
+    { name: "EDWARD ESHUN", index: "BSCIT/CR/01/23/0001", region: "CR" }
+  ],
+  4: [
+    { name: "EMMANUEL ATO KOOMSON-BINEY", index: "BSCIT/CR/01/24/0014", region: "CR" },
+    { name: "EMMANUEL KOFI PIETERSON", index: "CD/ITE/CR/01/24/0004", region: "CR" },
+    { name: "FRANCIS MAWULI FIATI", index: "BSCIT/CR/01/23/0004", region: "CR" },
+    { name: "FRANK EGHAN", index: "CD/ITE/CR/01/24/0005", region: "CR" },
+    { name: "GODWIN ADZRA", index: "CD/ITE/CR/01/23/0014", region: "CR" },
+    { name: "JAMIL UMAR", index: "BSCIT/CR/01/24/0023", region: "CR" },
+    { name: "JOSEPH AHINAKWAH", index: "BSCIT/CR/01/23/0005", region: "CR" },
+    { name: "KYAKYE EMMANUEL OKYERE", index: "BSCIT/CR/30/25/0003", region: "CR" }
+  ],
+  5: [
+    { name: "MENSAH LEONNDEL", index: "CD/ITE/CR/01/23/0023", region: "CR" },
+    { name: "MERSHACK ANNAN", index: "CD/ITE/CR/01/23/0003", region: "CR" },
+    { name: "MOHAMMED SAEED", index: "BSCIT/CR/01/24/0022", region: "CR" },
+    { name: "NANA DANSO OKOH-OKAI", index: "BSCIT/CR/01/23/0010", region: "CR" },
+    { name: "Obeng Emmanuel", index: "BSCIT/BR/30/25/0001", region: "CR" },
+    { name: "OSEI KOFI BROBBEY", index: "BSCIT/CR/30/25/0010", region: "CR" },
+    { name: "PATRICK PRINCE ZIKPUI", index: "BSCIT/CR/01/23/0014", region: "CR" },
+    { name: "RICHARD ESSEL", index: "BSCIT/CR/01/23/0006", region: "CR" }
+  ],
+  6: [
+    { name: "ROCKSON ODURO AKUAMOAH", index: "BSCIT/CR/01/23/0002", region: "CR" },
+    { name: "RUTH MENSAH", index: "CD/ITE/CR/01/23/0001", region: "CR" },
+    { name: "SALAMATU AHMED ABUBAKAR", index: "CD/ITE/CR/01/23/0002", region: "CR" },
+    { name: "SIMON QUAICOE", index: "CD/ITE/CR/01/24/0010", region: "CR" },
+    { name: "STEPHEN BOATENG", index: "CD/ITE/CR/01/23/0018", region: "CR" },
+    { name: "THEOPHILUS ARYEE", index: "CD/ITE/CR/01/23/0032", region: "CR" },
+    { name: "THEOPHILUS ARYEE", index: "CD/ITE/CR/01/23/0032", region: "CR" },
+    { name: "VALENTINE KAFUI AWUNYO", index: "BSCIT/CR/01/23/0013", region: "CR" }
+  ],
+  7: [
+    { name: "AFUM CLEMENT", index: "CD/ITE/AS/09/24/0019", region: "AS" },
+    { name: "Agnes Addai-Yeboah", index: "CD/ITE/AS/09/24/0008", region: "AS" },
+    { name: "Amofa  Amponsah Emmanuel", index: "CD/ITE/AS/09/24/0011", region: "AS" },
+    { name: "ANDREWS SEIDU", index: "BSCIT/AS/09/24/0005", region: "AS" },
+    { name: "ANNOR KOFI SETH", index: "CD/ITE/AS/09/23/0031", region: "AS" },
+    { name: "ANNOR OLIVER", index: "CD/ITE/AS/09/23/0003", region: "AS" },
+    { name: "AWUDU MALIK", index: "CD/ITE/AS/09/24/0003", region: "AS" },
+    { name: "Baffour kyei Emmanuel", index: "CD/ITE/AS/09/23/0012", region: "AS" },
+    { name: "Boadu Richard", index: "BSCIT/AS/09/23/0006", region: "AS" },
+    { name: "Boateng Richard", index: "CD/ITE/AS/09/24/0024", region: "AS" }
+  ],
+  8: [
+    { name: "Christiana Alarle", index: "CD/ITE/AS/09/24/0004", region: "AS" },
+    { name: "Collins Tuffour", index: "CD/ITE/AS/09/24/0016", region: "AS" },
+    { name: "Daniel Kwabena Boakye", index: "CD/ITE/AS/09/24/0006", region: "AS" },
+    { name: "DANQUAH HANNAH", index: "CD/ITE/AS/09/23/0027", region: "AS" },
+    { name: "Edmund Yedu Quansah", index: "BSCIT/AS/09/23/0002", region: "AS" },
+    { name: "Edwin Kwakye", index: "BSCIT/AS/09/23/0007", region: "AS" },
+    { name: "EMMANUELLA ADU-ADOMAH", index: "CD/ITE/AS/09/24/0001", region: "AS" },
+    { name: "Erica Asante", index: "CD/ITE/AS/09/23/0021", region: "AS" },
+    { name: "Faustina Awuah", index: "CD/ITE/AS/09/23/0032", region: "AS" }
+  ],
+  9: [
+    { name: "FRANK NANA ADJEI BAFFOUR", index: "BSCIT/AS/09/23/0008", region: "AS" },
+    { name: "ISAAC OPPONG", index: "CD/ITE/AS/09/23/0010", region: "AS" },
+    { name: "JONATHAN OSEI BOATENG", index: "CD/ITE/AS/09/24/0012", region: "AS" },
+    { name: "Maxwell Junior Atta Poku", index: "CD/ITE/AS/09/24/0014", region: "AS" },
+    { name: "MICHEAL OPOKU ASAMOAH", index: "CD/ITE/AS/09/23/0029", region: "AS" },
+    { name: "Rita Bobie Ansah", index: "CD/ITE/AS/09/24/0005", region: "AS" },
+    { name: "SAAH ATTA DANIEL", index: "CD/ITE/AS/09/24/0010", region: "AS" },
+    { name: "SAMIRA NUHU YAHYA", index: "CD/ITE/AS/09/24/0007", region: "AS" },
+    { name: "Stella Boateng Mensah", index: "CD/ITE/AS/09/23/0009", region: "AS" }
+  ],
+  10: [
+    { name: "ADDEY SAMPSON", index: "CD/ITE/ER/01/24/0001", region: "ER" },
+    { name: "Adjovu Abdul Rahman", index: "CD/ITE/ER/01/24/0018", region: "ER" },
+    { name: "ALEX TETTEH", index: "CD/ITE/ER/01/24/0005", region: "ER" },
+    { name: "Awo-Teye Seth", index: "CD/ITE/ER/01/24/0012", region: "ER" },
+    { name: "Boateng Emmanuel Boadu", index: "CD/ITE/ER/01/24/0006", region: "ER" },
+    { name: "BOATENG PRINCE", index: "CD/ITE/ER/01/24/0009", region: "ER" },
+    { name: "Darko Emmanuel", index: "BSCIT/ER/01/23/0005", region: "ER" },
+    { name: "Larbi Tetteh Gabriel", index: "BSCIT/ER/01/23/0001", region: "ER" },
+    { name: "ERIC KOBINA MENSAH", index: "CD/ITE/ER/01/24/0017", region: "ER" },
+    { name: "FYNN-SNAMAN ARCHIBALD NYAMEATE", index: "CD/ITE/ER/01/23/0019", region: "ER" }
+  ],
+  11: [
+    { name: "Joana Yaa Amponsah", index: "CD/ITE/ER/01/24/0016", region: "ER" },
+    { name: "KYEI ASOMANING KWAKU", index: "CD/ITE/ER/01/24/0004", region: "ER" },
+    { name: "Lydia Baah Amoako", index: "CD/ITE/ER/01/24/0010", region: "ER" },
+    { name: "OBENG ERNEST", index: "CD/ITE/ER/01/24/0011", region: "ER" },
+    { name: "Peter Kofi Agradi", index: "CD/ITE/ER/01/23/0003", region: "ER" },
+    { name: "Richmond Seyram Wordekpor", index: "CD/ITE/ER/01/23/0017", region: "ER" },
+    { name: "Susana Antwi", index: "BSCIT/ER/01/23/0002", region: "ER" },
+    { name: "YELLOOH YAW ZAKKOUR", index: "CD/ITE/ER/01/24/0003", region: "ER" }
+  ],
+  12: [
+    { name: "ABDUL NASIR ABDUL RAHAMAN", index: "CD/ITE/NR/02/24/0008", region: "NR" },
+    { name: "ABDUL-WARIS ZUA ISSAH", index: "CD/ITE/NR/02/24/0005", region: "NR" },
+    { name: "Adam Mansuru", index: "CD/ITE/NR/02/24/0001", region: "NR" },
+    { name: "Akanbasiwayi Joshua", index: "CD/ITE/NR/02/24/0016", region: "NR" },
+    { name: "Alhassan Shaibu Eliasu", index: "CD/ITE/NR/02/24/0009", region: "NR" },
+    { name: "Alhassan Tarika Mohammed", index: "CD/ITE/NR/02/24/0015", region: "NR" },
+    { name: "Daniel Mawuli Agbelesessie", index: "BSCIT/NR/02/23/0005", region: "NR" },
+    { name: "Dery Naamwin Charlotte", index: "BSCIT/NR/02/24/0003", region: "NR" }
+  ],
+  13: [
+    { name: "Fuseini Rauf", index: "CD/ITE/NR/02/24/0010", region: "NR" },
+    { name: "ISSAH BABA IDDI", index: "BSCIT/NR/02/24/0009", region: "NR" },
+    { name: "JOSEPH SUHUYINI MAHAMA", index: "CD/ITE/NR/02/23/0020", region: "NR" },
+    { name: "Kwesi Sam Wilson", index: "CD/ITE/NR/02/23/0021", region: "NR" },
+    { name: "MOHAMMED ABDUL MUMIN", index: "BSCIT/NR/02/23/0007", region: "NR" },
+    { name: "Nkabiche Joel Niyasangma", index: "Cd/ite/NR/23/0002", region: "NR" },
+    { name: "OSMAN SALIM", index: "BSCIT/NR/02/23/0001", region: "NR" },
+    { name: "YAKUBU ABDUL-RAZAK", index: "CD/ITE/NR/02/24/0004", region: "NR" }
+  ],
+  14: [
+    { name: "ALLAKOM", index: "CD/ITE/BA/11/24/0003", region: "BA" },
+    { name: "AMANKWAA ISAAC", index: "CD/ITE/BA/11/24/0015", region: "BA" },
+    { name: "Asaman Salifu Charles", index: "BScIT/BA/11/24/0005", region: "BA" },
+    { name: "ASAMAN SALIFU CHARLES", index: "BSCIT/BA/11/24/0005", region: "BA" },
+    { name: "ASARE KWAKU SAMUEL", index: "CD/ITE/BA/11/23/0001", region: "BA" },
+    { name: "BAWEL ANDREWS", index: "CD/ITE/BA/11/24/0013", region: "BA" },
+    { name: "BRIGHT ASOMAH", index: "CD/ITE/BA/11/24/0011", region: "BA" },
+    { name: "EBENEZER OSEI BOAHEN", index: "CD/ITE/BA/11/24/0006", region: "BA" }
+  ],
+  15: [
+    { name: "GEORGE BOATENG", index: "CD/ITE/BA/11/23/0021", region: "BA" },
+    { name: "ISAAC OSEI YEBOAH", index: "CD/ITE/BA/11/23/0008", region: "BA" },
+    { name: "JOSEPH OHENE ASARE", index: "CD/ITE/BA/11/24/0008", region: "BA" },
+    { name: "NSOH NICHOLAS", index: "CD/ITE/BA/11/23/0014", region: "BA" },
+    { name: "Sarfo kwadwo Evans", index: "CD/ITE/BA/11/23/0005", region: "BA" },
+    { name: "SEI YIRIARAH RANSOM", index: "CD/ITE/BA/11/24/0018", region: "BA" },
+    { name: "Tsitsia Pearl Afi", index: "CD/ITE/BA/11/23/0015", region: "BA" }
+  ],
+  16: [
+    { name: "ABRAHAM KATTAH", index: "BSCIT/WR/08/23/0006", region: "WR" },
+    { name: "Asamoah Raymond Senior", index: "BSCIT/WR/08/23/0004", region: "WR" },
+    { name: "EBENEZER KWESI NKRUMAH", index: "BSCIT/WR/08/23/0002", region: "WR" },
+    { name: "Emmanuel Baidoo", index: "BSCIT/WR/08/23/0003", region: "WR" },
+    { name: "Gloria obenewaa-Adjei", index: "BSCIT/WR/08/24/0007", region: "WR" },
+    { name: "Isaac Kwesi Dei-Forson", index: "BSCIT/WR/08/23/0011", region: "WR" }
+  ],
+  17: [
+    { name: "ISAAC OPOKU", index: "CD/ITE/WR/08/24/0001", region: "WR" },
+    { name: "MERCY ADOMAKOA BOATENG", index: "BSCIT/WR/08/23/0009", region: "WR" },
+    { name: "Michael Aidoo", index: "CD/ITE/WR/08/24/0007", region: "WR" },
+    { name: "SAFO DOMINIC CLEMENT", index: "CD/ITE/WR/08/23/0005", region: "WR" },
+    { name: "Solomon Dodoo-Entsie", index: "CD/ITE/WR/08/24/0006", region: "WR" },
+    { name: "Solomon Yao Agbemadu", index: "CD/ITE/WR/08/24/0008", region: "WR" }
+  ],
+  18: [
+    { name: "AKURUGU ASSIBI JOSEPHINE", index: "CD/ITE/UE/02/24/0010", region: "UE" },
+    { name: "AMADU WABUGU SHERIF", index: "CD/ITE/UE/02/24/0007", region: "UE" },
+    { name: "AMARTEY ISAAC JUNIOR", index: "CD/ITE/UE/02/24/0005", region: "UE" },
+    { name: "Eric Wonbod Laar", index: "CD/ITE/UE/02/24/0003", region: "UE" },
+    { name: "Faisal Ali", index: "BSCIT/UE/02/23/0001", region: "UE" }
+  ],
+  19: [
+    { name: "KABA BUGASE RAPHAEL", index: "CD/ITE/UE/02/23/0007", region: "UE" },
+    { name: "KORTOE RICHARD MAKAFUI", index: "CD/ ITE/UE/02/24/0001", region: "UE" },
+    { name: "ATULE AUGUSTINE AWINTIBRA", index: "CD/ITE/UE/02/23/0004", region: "UE" },
+    { name: "MAJEED ABDULAI", index: "CD/ITE/UE/02/23/0002", region: "UE" },
+    { name: "SEIDU SURINLA ABDALLAH", index: "CD/ITE/UE/02/24/0011", region: "UE" },
+    { name: "YIDANA ABDUL-MAJEED", index: "BScIT/UE/30/25/0001", region: "UE" }
+  ],
+  20: [
+    { name: "ABDUL-RASHID ISSAHAKU SUNGSUMA", index: "CD/ITE/UW/01/24/0003", region: "UW" },
+    { name: "ABDUL-WASIR MAHAMA YAKUBU", index: "CD/ITE/UW/01/24/0002", region: "UW" },
+    { name: "Beyuo Rita", index: "CD/ITE/UW/30/25/0001", region: "UW" },
+    { name: "Mumuni mabruk", index: "CD/ITE/UW/01/24/0001", region: "UW" },
+    { name: "MWINI REINFRED", index: "CD/ITE/UW/01/24/0006", region: "UW" }
+  ],
+  21: [
+    { name: "Agyei Richard", index: "CD/ITE/GA/14/23/0018", region: "GA" },
+    { name: "Azama Portia", index: "BSCIT/GA/14/23/0036", region: "GA" },
+    { name: "KELVIN EDOE QUARSHIE", index: "BSCIT/GA/14/23/0004", region: "GA" },
+    { name: "SELBY LESLIE BLANKSON", index: "BSCIT/GA/14/24/0054", region: "GA" },
+    { name: "Steven Okra Prah", index: "BSCIT/GA/14/23/0003", region: "GA" }
+  ],
+  22: [
+    { name: "ABOTSI JOY", index: "BSCIT/VR/04/24/0006", region: "VR" },
+    { name: "ADZIMAHE Gabriel Kwaku", index: "CD/ITE/VR/04/24/0018", region: "VR" },
+    { name: "Agbeko Elijah", index: "CD/ITE/VR/04/24/0009", region: "VR" },
+    { name: "AMEKUFE VICTOR", index: "CD/ITE/VR/04/24/0014", region: "VR" },
+    { name: "AMOAH DAVID", index: "CD/ITE/VR/04/24/0016", region: "VR" },
+    { name: "Apetsi Joseph Senyo", index: "CD/ITE/VR/04/24/0002", region: "VR" },
+    { name: "Lawrence Richmond Agbemadu", index: "BSCIT/VR/04/23/0003", region: "VR" }
+  ]
+};
+
+const regionNames = {
+  VR:"Volta", CR:"Central", AS:"Ashanti", ER:"Eastern", NR:"Northern",
+  BA:"Brong-Ahafo", WR:"Western", UE:"Upper East", UW:"Upper West", GA:"Greater Accra"
+};
+
+const groupContainer = document.getElementById("groupContainer");
+const modal = document.getElementById("groupModal");
+const studentList = document.getElementById("studentList");
+const legend = document.getElementById("legend");
+const sectionLabel = document.getElementById("sectionLabel");
+
+let activeRegion = null;
+
+// Build region legend/filter
+const regionsPresent = Object.keys(regionNames).filter(r =>
+  Object.values(groups).some(list => list.some(s => s.region === r))
+);
+
+regionsPresent.forEach(r => {
+  const btn = document.createElement("button");
+  btn.innerHTML = `<span class="dot" style="background:var(--r-${r})"></span>${r} · ${regionNames[r]}`;
+  btn.onclick = () => {
+    activeRegion = activeRegion === r ? null : r;
+    renderLegend();
+    renderCards();
+  };
+  btn.dataset.region = r;
+  legend.appendChild(btn);
+});
+
+function renderLegend(){
+  [...legend.children].forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.region === activeRegion);
+  });
+  sectionLabel.textContent = activeRegion
+    ? `Showing groups with students from ${regionNames[activeRegion]} (${activeRegion}) — click again to clear`
+    : "22 groups · click a region above to filter, or click any group to view its members";
+}
+
+function renderCards(){
+  groupContainer.innerHTML = "";
+  Object.keys(groups).forEach(num => {
+    const list = groups[num];
+    const hasRegion = list.some(s => s.region === activeRegion);
+    const card = document.createElement("div");
+    card.className = "group-card";
+    if (activeRegion) card.classList.add(hasRegion ? "highlighted" : "dimmed");
+
+    const uniqueRegions = [...new Set(list.map(s => s.region))];
+    const dots = uniqueRegions.map(r => `<span class="dot" style="background:var(--r-${r})" title="${regionNames[r] || r}"></span>`).join("");
+
+    card.innerHTML = `
+      <div class="g-num">Group ${num}</div>
+      <div class="g-count">${list.length} member${list.length !== 1 ? "s" : ""}</div>
+      <div class="g-regions">${dots}</div>
+    `;
+    card.onclick = () => showGroup(num);
+    groupContainer.appendChild(card);
+  });
+}
+
+function showGroup(num){
+  document.getElementById("modalTitle").innerText = `Group ${num}`;
+  studentList.innerHTML = groups[num].map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.name}</td>
+      <td>${s.index}</td>
+      <td class="rtag"><span class="badge" style="background:var(--r-${s.region})">${s.region}</span></td>
+    </tr>
+  `).join('');
+  modal.style.display = "block";
+}
+
+document.querySelector(".close").onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const val = e.target.value.toLowerCase().trim();
+  const results = document.getElementById("searchResults");
+  results.innerHTML = val.length < 2 ? "" : Object.entries(groups).flatMap(([g, list]) =>
+    list.filter(s => s.name.toLowerCase().includes(val) || s.index.toLowerCase().includes(val))
+        .map(s => `
+          <div class="result-card">
+            <div><strong>${s.name}</strong><br><span class="idx">${s.index}</span></div>
+            <span class="result-tag" style="background:var(--r-${s.region})">Group ${g}</span>
+          </div>`)
+  ).join('');
+});
+
+renderLegend();
+renderCards();
+</script>
 </body>
 </html>
