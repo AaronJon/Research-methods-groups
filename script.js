@@ -1,103 +1,34 @@
-const container = document.getElementById("groupContainer");
+const groupContainer = document.getElementById("groupContainer");
 const modal = document.getElementById("groupModal");
-const modalTitle = document.getElementById("modalTitle");
 const studentList = document.getElementById("studentList");
-const closeBtn = document.querySelector(".close");
 
-
-// Create group cards
-Object.keys(groups).forEach(groupNumber => {
-
+// Populate groups
+Object.keys(groups).forEach(num => {
     const card = document.createElement("div");
-
     card.className = "group-card";
-
-    card.innerText = "Group " + groupNumber;
-
-    card.onclick = () => showGroup(groupNumber);
-
-    container.appendChild(card);
-
+    card.innerText = `Group ${num}`;
+    card.onclick = () => showGroup(num);
+    groupContainer.appendChild(card);
 });
 
-
-// Show group in modal
-function showGroup(groupNumber){
-
-    modalTitle.innerText = "Group " + groupNumber;
-
-    studentList.innerHTML = "";
-
-    const students = groups[groupNumber];
-
-    students.forEach((student,index)=>{
-
-        const row = `
-        <tr>
-            <td>${index+1}</td>
-            <td>${student.name}</td>
-            <td>${student.index}</td>
-            <td>${student.region}</td>
-        </tr>
-        `;
-
-        studentList.innerHTML += row;
-
-    });
-
-    modal.style.display = "flex";
+function showGroup(num) {
+    document.getElementById("modalTitle").innerText = `Group ${num}`;
+    studentList.innerHTML = groups[num].map((s, i) => `
+        <tr><td>${i + 1}</td><td>${s.name}</td><td>${s.index}</td><td>${s.region}</td></tr>
+    `).join('');
+    modal.style.display = "block";
 }
 
+// Close logic
+document.querySelector(".close").onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
 
-// Close modal
-closeBtn.onclick = () => modal.style.display = "none";
-
-window.onclick = (e)=>{
-if(e.target == modal){
-modal.style.display = "none";
-}
-}
-const searchInput = document.getElementById("searchInput");
-const searchResults = document.getElementById("searchResults");
-
-searchInput.addEventListener("input", function(){
-
-const value = searchInput.value.toLowerCase().trim();
-
-searchResults.innerHTML = "";
-
-if(value.length < 3){
-return;
-}
-
-for(let group in groups){
-
-groups[group].forEach(student => {
-
-if(
-student.name.toLowerCase().includes(value) ||
-student.index.toLowerCase().includes(value)
-){
-
-const result = document.createElement("div");
-
-result.className = "result-card";
-
-result.innerHTML = `
-<div>
-<div class="result-name">${student.name}</div>
-<div>${student.index}</div>
-</div>
-
-<div class="result-group">Group ${group}</div>
-`;
-
-searchResults.appendChild(result);
-
-}
-
-});
-
-}
-
+// Search logic
+document.getElementById("searchInput").addEventListener("input", (e) => {
+    const val = e.target.value.toLowerCase().trim();
+    const results = document.getElementById("searchResults");
+    results.innerHTML = val.length < 2 ? "" : Object.entries(groups).flatMap(([g, list]) => 
+        list.filter(s => s.name.toLowerCase().includes(val) || s.index.toLowerCase().includes(val))
+            .map(s => `<div class="result-card"><div><strong>${s.name}</strong><br>${s.index}</div><div class="result-group">Group ${g}</div></div>`)
+    ).join('');
 });
