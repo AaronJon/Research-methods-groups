@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Methods — Group Questions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#1b1d2a;
+    --paper:#f6f4ef;
+    --card:#ffffff;
+    --line:#e4e0d6;
+    --navy:#232653;
+    --gold:#c8912f;
+    --muted:#6b6f80;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .nav{ display:flex; justify-content:center; gap:.6rem; padding:.8rem 1rem 0; background:var(--navy); }
+  .nav a{ color:#e4e2f2; text-decoration:none; font-size:.82rem; font-weight:600; padding:.5rem 1.1rem; border-radius:999px 999px 0 0; letter-spacing:.02em; }
+  .nav a.active{ background:var(--paper); color:var(--navy); }
+  .nav a:not(.active):hover{ background:rgba(255,255,255,.1); }
+
+  header{
+    background:var(--navy); color:#f2f1ea;
+    padding:3.2rem 1.5rem 2.6rem; text-align:center;
+    border-bottom:6px solid var(--gold);
+  }
+  header .eyebrow{ font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:#c9c6e8; margin-bottom:.6rem; font-weight:600; }
+  header h1{ font-family:'Fraunces',serif; font-weight:600; font-size:clamp(1.8rem,4vw,2.7rem); margin:0 0 .5rem; }
+  header p{ margin:0; color:#c3c1da; font-size:.98rem; }
+
+  .section-label{ text-align:center; max-width:900px; margin:2rem auto .2rem; padding:0 1.2rem; color:var(--muted); font-size:.82rem; }
+
+  .container{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+    gap:16px; padding:1.2rem; max-width:960px; margin:0 auto 3rem;
+  }
+
+  .group-card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:1.1rem 1.1rem 1rem; cursor:pointer; text-align:left;
+    box-shadow:0 2px 6px rgba(27,29,42,.04); transition:.18s ease;
+  }
+  .group-card:hover{ transform:translateY(-3px); box-shadow:0 10px 20px -8px rgba(27,29,42,.18); border-color:var(--navy); }
+
+  .group-card .g-num{ font-family:'Fraunces',serif; font-size:1.5rem; font-weight:600; line-height:1; }
+  .g-qtag{
+    display:inline-block; margin-top:.6rem; background:var(--gold); color:#fff;
+    padding:.25rem .7rem; border-radius:999px; font-size:.75rem; font-weight:700; letter-spacing:.02em;
+  }
+  .g-qpreview{ color:var(--muted); font-size:.78rem; margin-top:.55rem; line-height:1.4; }
+
+  .modal{ display:none; position:fixed; inset:0; background:rgba(27,29,42,.55); backdrop-filter:blur(3px); z-index:1000; padding:2rem 1rem; }
+  .modal-content{
+    background:var(--card); margin:2vh auto; padding:2rem; width:100%; max-width:720px;
+    border-radius:18px; position:relative; max-height:88vh; overflow-y:auto;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.4);
+  }
+  .modal-content h2{ font-family:'Fraunces',serif; font-weight:600; margin:0 0 .3rem; }
+  .modal-content .q-label{ color:var(--gold); font-weight:700; font-size:.85rem; margin-bottom:1rem; letter-spacing:.03em; }
+  .modal-content .q-prompt{ font-size:.98rem; line-height:1.55; margin-bottom:1.4rem; }
+  .modal-content h3{ font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:0 0 .6rem; }
+  .modal-content ol{ margin:0; padding-left:1.2rem; }
+  .modal-content ol li{ margin-bottom:.45rem; font-size:.92rem; line-height:1.45; }
+  .close{ position:absolute; top:1.1rem; right:1.3rem; font-size:1.6rem; cursor:pointer; color:var(--muted); line-height:1; }
+  .close:hover{ color:var(--ink); }
+
+  footer{ text-align:center; color:var(--muted); font-size:.8rem; padding:1rem 1rem 2.5rem; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <a href="index.html">Groups</a>
+  <a href="questions.html" class="active">Questions</a>
+</div>
+
+<header>
+  <div class="eyebrow">INF399D / SBC303D Research Methods</div>
+  <h1>Group Presentation Questions</h1>
+  <p>Each group has been randomly assigned one question — click your group to view it</p>
+</header>
+
+<div class="section-label">10–12 slides, 10–15 minutes · illustrate with a real or realistic Ghanaian example</div>
+
+<div class="container" id="groupContainer"></div>
+
+<div class="modal" id="qModal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modalGroupTitle"></h2>
+    <div class="q-label" id="modalQLabel"></div>
+    <div class="q-prompt" id="modalQPrompt"></div>
+    <h3>Suggested slide breakdown</h3>
+    <ol id="modalBreakdown"></ol>
+  </div>
+</div>
+
+<footer>Tap outside the panel or press the × to close</footer>
+
+<script>
+// Fixed random assignment — group number -> question number
+const assignment = {
+  1: 1, 2: 6, 3: 10, 4: 4, 5: 1, 6: 9, 7: 1, 8: 8, 9: 10, 10: 8,
+  11: 4, 12: 8, 13: 8, 14: 4, 15: 9, 16: 3, 17: 5, 18: 5, 19: 4,
+  20: 9, 21: 5, 22: 1
+};
+
+const questions = {
+  1: {
+    title: "Sampling in a cholera outbreak — speed over probability",
+    prompt: "A cholera outbreak has just been confirmed in a suburb of Cape Coast. Health officials need to understand infection patterns within hours, not weeks. As a research team, decide which sampling technique you would use to gather data quickly, and explain clearly why full probability sampling (e.g., simple random or stratified sampling) would be impractical in this situation.",
+    breakdown: [
+      "Title slide + group members",
+      "What sampling is and why it matters in urgent situations",
+      "The scenario: cholera outbreak, Cape Coast, what data is needed and how fast",
+      "Why probability sampling techniques would fail here (time, resources, sampling frame issues)",
+      "The technique your group recommends (e.g., accidental or purposive sampling), full definition and justification",
+      "How you would actually carry it out on the ground (step-by-step)",
+      "What you gain by moving fast",
+      "What you risk losing in accuracy or representativeness",
+      "How UCC or Ghana Health Service teams could realistically apply this in practice",
+      "Conclusion and key takeaway"
+    ]
+  },
+  2: {
+    title: "Stratified vs cluster sampling — UCC transportation survey",
+    prompt: "UCC wants to survey students across all four halls of residence and the off-campus community about transportation challenges to lectures. Using this scenario, compare stratified and cluster sampling as two possible approaches, and recommend which one your group would use, giving your reasoning.",
+    breakdown: [
+      "Title slide",
+      "The scenario: UCC transportation survey across halls and off-campus students",
+      "Definition and mechanics of stratified sampling",
+      "Definition and mechanics of cluster sampling",
+      "Applying stratified sampling to the UCC scenario",
+      "Applying cluster sampling to the same scenario",
+      "Side-by-side comparison: cost, time, accuracy, practicality",
+      "Your group's recommended choice and why",
+      "What could go wrong with your chosen method if not carefully executed",
+      "Conclusion"
+    ]
+  },
+  3: {
+    title: "Snowball sampling — galamsey operators and unlicensed okada riders",
+    prompt: "Researchers wanting to study galamsey (illegal small-scale mining) operators or okada riders working without licenses face a problem: there is no official list or sampling frame for these groups. Justify why snowball sampling is the right choice here, and point out one serious risk of bias this method introduces into the findings.",
+    breakdown: [
+      "Title slide",
+      "The problem: populations with no sampling frame (galamsey operators / unlicensed okada riders)",
+      "Definition and mechanics of snowball sampling",
+      "Why other probability techniques cannot work here",
+      "How the snowball process would actually unfold, step-by-step, starting from one contact",
+      "Real or illustrative Ghanaian example of a study using this approach",
+      "The specific bias risk your group identifies (e.g., all contacts pulled from one social network)",
+      "How a researcher might reduce (not eliminate) that risk",
+      "When you would NOT recommend snowball sampling",
+      "Conclusion"
+    ]
+  },
+  4: {
+    title: "Systematic sampling — 500 final-year students, sample of 25",
+    prompt: "Your department has a list of 500 final-year students and needs a sample of 25 for a study on graduate employment expectations. Work through the systematic sampling procedure: calculate the sampling interval (K), pick a random start, and show which students on the list would actually be selected. Explain how a different random start would change your final sample.",
+    breakdown: [
+      "Title slide",
+      "Definition of systematic sampling and where it sits among probability techniques",
+      "The scenario: 500 final-year students, sample of 25 needed",
+      "Calculating K = N/n and what it means practically",
+      "Choosing a random start (show your method, lottery/random number table)",
+      "Full worked list of which student numbers get selected",
+      "What happens if the random start had been a different number, show the shift",
+      "Strengths of systematic sampling over simple random sampling here",
+      "One weakness or trap to watch for (e.g., hidden pattern in the list)",
+      "Conclusion"
+    ]
+  },
+  5: {
+    title: "Critiquing purposive sampling — the UCC exhibition selection",
+    prompt: "A lecturer selecting the \"best\" and \"most typical\" final-year projects to showcase at a UCC departmental exhibition is using purposive sampling, based purely on personal judgment about what counts as typical. Critique this approach: what happens to the credibility of any conclusions drawn from such a selection, and what would strengthen the process?",
+    breakdown: [
+      "Title slide",
+      "Definition of purposive sampling and its basic assumption",
+      "The scenario: lecturer selecting \"typical\" projects for exhibition",
+      "Why judging \"typicality\" without an objective basis is risky",
+      "What can go wrong with the conclusions or reputation built on this selection",
+      "A comparison: how would probability sampling have handled this instead?",
+      "What would make purposive sampling more defensible (clear criteria, multiple judges, etc.)",
+      "Situations where purposive sampling genuinely is the right tool despite this weakness",
+      "Your group's verdict: was the lecturer's approach acceptable?",
+      "Conclusion"
+    ]
+  },
+  6: {
+    title: "Is quota sampling really \"representative\"? — Makola Market",
+    prompt: "Quota sampling is sometimes loosely called \"representative sampling,\" but this label is criticized as misleading. Using a market survey (e.g., a study on price changes for foodstuffs at Makola Market, with quotas set by gender and type of trader), argue for or against calling quota sampling truly representative.",
+    breakdown: [
+      "Title slide",
+      "Definition of quota sampling",
+      "The scenario: Makola Market foodstuff price study, quotas by gender/trader type",
+      "How the quotas would be set and filled in practice",
+      "The case FOR calling it representative",
+      "The case AGAINST calling it representative",
+      "What distinguishes quota sampling from genuine probability-based representative sampling",
+      "Your group's position, with reasoning",
+      "Practical advice: when quota sampling is good enough for a research purpose",
+      "Conclusion"
+    ]
+  },
+  7: {
+    title: "Fixing a flawed NHIS survey question",
+    prompt: "A student researcher studying attitudes toward the National Health Insurance Scheme (NHIS) writes this survey question: \"Most doctors say NHIS delays are killing patients — do you agree, and shouldn't government fix the delays and also reduce premiums?\" Identify every principle of good question writing this item violates then rewrite it as a proper, usable questionnaire item.",
+    breakdown: [
+      "Title slide",
+      "Recap: principles of good question writing",
+      "The original flawed question, displayed in full",
+      "Violation 1 — identify and explain (e.g., leading question)",
+      "Violation 2 — identify and explain (e.g., prestige bias)",
+      "Violation 3 — identify and explain (e.g., double-barreled question)",
+      "Why these flaws would distort the NHIS study's findings",
+      "Your rewritten version of the question",
+      "Why your rewrite fixes each problem",
+      "Conclusion"
+    ]
+  },
+  8: {
+    title: "Getting the order right — UCC financial hardship questionnaire",
+    prompt: "A questionnaire on financial hardship among UCC students opens with questions about monthly allowance, health status, and family income before asking anything about course load or hall of residence. Explain why this sequencing is poor practice, using the sequencing guidelines, and redesign the opening section of the questionnaire.",
+    breakdown: [
+      "Title slide",
+      "Recap: sequencing guidelines for questionnaires",
+      "The scenario: UCC financial hardship study, questionnaire as currently ordered",
+      "Why opening with income/health/family details is a poor start",
+      "What a \"non-controversial opening question\" should look like here",
+      "Where sensitive questions (income, health) should actually sit in the flow",
+      "Your redesigned question order, section by section",
+      "What effect you expect this redesign to have on response quality and honesty",
+      "One additional sequencing mistake researchers commonly make",
+      "Conclusion"
+    ]
+  },
+  9: {
+    title: "Open-ended vs closed-ended — exam malpractice in Central Region",
+    prompt: "A researcher is designing a study on the causes of examination malpractice among senior high school students in the Central Region. Weigh the case for open-ended questions against closed-ended questions for this specific topic, and recommend which format should dominate the questionnaire, defending your choice with the advantages/disadvantages.",
+    breakdown: [
+      "Title slide",
+      "The scenario: causes of exam malpractice, SHS students, Central Region",
+      "Definition and example of open-ended questions for this topic",
+      "Definition and example of closed-ended questions for this topic",
+      "Advantages of open-ended questions here",
+      "Advantages of closed-ended questions here",
+      "Disadvantages that matter most for this specific study",
+      "Your group's recommended blend/dominant format",
+      "A sample question in your recommended format",
+      "Conclusion"
+    ]
+  },
+  10: {
+    title: "Reducing interviewer bias — teenage pregnancy study",
+    prompt: "While collecting data face-to-face on teenage pregnancy in a Cape Coast community, a research assistant notices respondents seem to be shaping their answers based on how the assistant reacts to what they say. Propose two concrete, practical steps this research team could take to reduce interviewer bias without abandoning the interview method altogether.",
+    breakdown: [
+      "Title slide",
+      "Recap: interview as a data collection method, advantages and disadvantages",
+      "The scenario: teenage pregnancy study, Cape Coast community",
+      "What interviewer bias looks like in this specific case",
+      "Why this topic makes bias especially likely (sensitivity, stigma)",
+      "Step 1 your group proposes to reduce bias, explained in practice",
+      "Step 2 your group proposes to reduce bias, explained in practice",
+      "Why you are not recommending a switch to questionnaires instead",
+      "What limitations would still remain even after your fixes",
+      "Conclusion"
+    ]
+  },
+  11: {
+    title: "Redesigning a poorly formatted youth crime questionnaire",
+    prompt: "A questionnaire studying causes of youth crime in a community places the question \"Why do you engage in criminal activity?\" directly next to \"What is your educational level?\" with no sub-headings separating background information from the main study questions. Critique this layout using the formatting principles, and redesign it properly.",
+    breakdown: [
+      "Title slide",
+      "Recap: formatting principles for questionnaires",
+      "The scenario: youth crime study, current flawed layout shown in full",
+      "What's wrong with placing these two questions next to each other",
+      "Why background information needs its own clearly labeled section",
+      "What sub-headings this questionnaire is missing (background, causes, effects, etc.)",
+      "Your redesigned layout, section by section",
+      "Why proper layout affects both data quality and respondent comfort",
+      "One other layout principle you will apply here",
+      "Conclusion"
+    ]
+  }
+};
+
+const groupContainer = document.getElementById("groupContainer");
+const modal = document.getElementById("qModal");
+
+Object.keys(assignment).forEach(g => {
+  const qNum = assignment[g];
+  const q = questions[qNum];
+  const card = document.createElement("div");
+  card.className = "group-card";
+  card.innerHTML = `
+    <div class="g-num">Group ${g}</div>
+    <div class="g-qtag">Question ${qNum}</div>
+    <div class="g-qpreview">${q.title}</div>
+  `;
+  card.onclick = () => showQuestion(g, qNum);
+  groupContainer.appendChild(card);
+});
+
+function showQuestion(g, qNum){
+  const q = questions[qNum];
+  document.getElementById("modalGroupTitle").innerText = `Group ${g}`;
+  document.getElementById("modalQLabel").innerText = `Question ${qNum} — ${q.title}`;
+  document.getElementById("modalQPrompt").innerText = q.prompt;
+  document.getElementById("modalBreakdown").innerHTML = q.breakdown.map(s => `<li>${s}</li>`).join("");
+  modal.style.display = "block";
+}
+
+document.querySelector(".close").onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+</script>
+</body>
+</html>
