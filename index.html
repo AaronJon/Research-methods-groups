@@ -143,10 +143,25 @@
   .badge{ color:#fff; padding:.2rem .55rem; border-radius:999px; font-size:.72rem; font-weight:600; }
 
   footer{ text-align:center; color:var(--muted); font-size:.8rem; padding:1rem 1rem 2.5rem; }
+
+  .nav{
+    display:flex; justify-content:center; gap:.6rem; padding:.8rem 1rem 0;
+    background:var(--navy);
+  }
+  .nav a{
+    color:#e4e2f2; text-decoration:none; font-size:.82rem; font-weight:600;
+    padding:.5rem 1.1rem; border-radius:999px 999px 0 0; letter-spacing:.02em;
+  }
+  .nav a.active{ background:var(--paper); color:var(--navy); }
+  .nav a:not(.active):hover{ background:rgba(255,255,255,.1); }
 </style>
 </head>
 <body>
 
+<div class="nav">
+  <a href="index.html" class="active">Groups</a>
+  <a href="questions.html">Questions</a>
+</div>
 <header>
   <div class="eyebrow">College of Distance Education</div>
   <h1>Research Methods Groups</h1>
@@ -196,7 +211,8 @@ const groups = {
     { name: "NUKUNU BENJAMIN", index: "CD/ITE/VR/04/24/0012", region: "VR" },
     { name: "ROBERT AHIAVE", index: "CD/ITE/VR/04/23/0009", region: "VR" },
     { name: "SYLVESTER ATTAH", index: "CD/ITE/VR/04/24/0004", region: "VR" },
-    { name: "TSEDZAH DAVID LIVINGSTON YAW", index: "CD/ITE/VR/04/24/0011", region: "VR" },
+    { name: "TSEDZAH DAVID LIVINGSTON YAW", index: "CD/ITE/VR/04/24/00011", region: "VR" },
+    { name: "AWUKU CORBAN", index: "CD/ITE/VR/04/24/0006", region: "VR" },
     { name: "ADDAE FELIX", index: "CD/ITE/VR/04/24/0013", region: "VR" }
   ],
   3: [
@@ -204,6 +220,7 @@ const groups = {
     { name: "ANNAN FRANKLIN", index: "CD/ITE/CR/01/23/0028", region: "CR" },
     { name: "ANTHONY DAVID AUBYN", index: "CD/ITE/CR/01/23/0029", region: "CR" },
     { name: "BOYE, EMMANUEL ABBAS", index: "CD/ITE/CR/01/23/0013", region: "CR" },
+    { name: "CLEMENT KOFI PRAH", index: "CD/ITE/CR/01/24/0014", region: "CR" },
     { name: "CLEMENT KOFI PRAH", index: "CD/ITE/CR/01/24/0014", region: "CR" },
     { name: "DORCAS ASIEDUWAA DONKOR", index: "CD/ITE/CR/01/23/0021", region: "CR" },
     { name: "Ebenezer Arthur", index: "BScIT/CR/01/23/0018", region: "CR" },
@@ -235,6 +252,7 @@ const groups = {
     { name: "SALAMATU AHMED ABUBAKAR", index: "CD/ITE/CR/01/23/0002", region: "CR" },
     { name: "SIMON QUAICOE", index: "CD/ITE/CR/01/24/0010", region: "CR" },
     { name: "STEPHEN BOATENG", index: "CD/ITE/CR/01/23/0018", region: "CR" },
+    { name: "THEOPHILUS ARYEE", index: "CD/ITE/CR/01/23/0032", region: "CR" },
     { name: "THEOPHILUS ARYEE", index: "CD/ITE/CR/01/23/0032", region: "CR" },
     { name: "VALENTINE KAFUI AWUNYO", index: "BSCIT/CR/01/23/0013", region: "CR" }
   ],
@@ -317,6 +335,7 @@ const groups = {
   14: [
     { name: "ALLAKOM", index: "CD/ITE/BA/11/24/0003", region: "BA" },
     { name: "AMANKWAA ISAAC", index: "CD/ITE/BA/11/24/0015", region: "BA" },
+    { name: "Asaman Salifu Charles", index: "BScIT/BA/11/24/0005", region: "BA" },
     { name: "ASAMAN SALIFU CHARLES", index: "BSCIT/BA/11/24/0005", region: "BA" },
     { name: "ASARE KWAKU SAMUEL", index: "CD/ITE/BA/11/23/0001", region: "BA" },
     { name: "BAWEL ANDREWS", index: "CD/ITE/BA/11/24/0013", region: "BA" },
@@ -405,17 +424,7 @@ let activeRegion = null;
 const regionsPresent = Object.keys(regionNames).filter(r =>
   Object.values(groups).some(list => list.some(s => s.region === r))
 );
-const allBtn = document.createElement("button");
-allBtn.innerHTML = `<span class="dot" style="background:var(--navy)"></span>All Regions`;
-allBtn.dataset.region = "";
-allBtn.onclick = () => {
-  activeRegion = null;
-  renderLegend();
-  renderCards();
-};
-legend.appendChild(allBtn);
 
-  
 regionsPresent.forEach(r => {
   const btn = document.createElement("button");
   btn.innerHTML = `<span class="dot" style="background:var(--r-${r})"></span>${r} · ${regionNames[r]}`;
@@ -430,7 +439,7 @@ regionsPresent.forEach(r => {
 
 function renderLegend(){
   [...legend.children].forEach(btn => {
-    btn.classList.toggle("active", (btn.dataset.region || null) === activeRegion);
+    btn.classList.toggle("active", btn.dataset.region === activeRegion);
   });
   sectionLabel.textContent = activeRegion
     ? `Showing groups with students from ${regionNames[activeRegion]} (${activeRegion}) — click again to clear`
