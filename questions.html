@@ -322,6 +322,13 @@ function showQuestion(g, qNum){
 
 document.querySelector(".close").onclick = () => modal.style.display = "none";
 window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+
+// If arrived via "Click here to see your question" (index.html?group=N), open it straight away
+const params = new URLSearchParams(window.location.search);
+const linkedGroup = params.get("group");
+if (linkedGroup && assignment[linkedGroup]) {
+  showQuestion(linkedGroup, assignment[linkedGroup]);
+}
 </script>
 </body>
 </html>
