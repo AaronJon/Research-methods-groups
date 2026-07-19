@@ -133,6 +133,13 @@
   }
   .close:hover{ color:var(--ink); }
 
+  .question-link{
+    display:inline-block; margin-top:1.3rem; background:var(--gold); color:#fff;
+    text-decoration:none; font-weight:700; font-size:.9rem; padding:.7rem 1.3rem;
+    border-radius:10px; transition:.15s ease;
+  }
+  .question-link:hover{ background:var(--navy); }
+
   table{ width:100%; border-collapse:collapse; }
   th{
     background:var(--paper); padding:.7rem .8rem; text-align:left; font-size:.78rem;
@@ -188,6 +195,7 @@
         <tbody id="studentList"></tbody>
       </table>
     </div>
+    <a id="modalQuestionLink" class="question-link" href="#">Click here to see your question →</a>
   </div>
 </div>
 
@@ -478,6 +486,7 @@ function showGroup(num){
       <td class="rtag"><span class="badge" style="background:var(--r-${s.region})">${s.region}</span></td>
     </tr>
   `).join('');
+  document.getElementById("modalQuestionLink").href = `questions.html?group=${num}`;
   modal.style.display = "block";
 }
 
